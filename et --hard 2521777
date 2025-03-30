@@ -1,0 +1,11 @@
+[33md8fae9d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: commit: Fix line endings
+[33m1f860ca[m HEAD@{1}: reset: moving to HEAD
+[33m1f860ca[m HEAD@{2}: commit: Fix line endings and update files
+[33m2521777[m HEAD@{3}: commit: Added public folder and removed unnecessary files
+[33me5d4ca2[m HEAD@{4}: commit: Added public folder and removed unnecessary files
+[33mcb5fc3d[m HEAD@{5}: commit: Added public folder and removed unnecessary files
+[33m1ce2363[m HEAD@{6}: commit: Your commit message
+[33m60f0d6e[m HEAD@{7}: Branch: renamed refs/heads/main to refs/heads/main
+[33m60f0d6e[m HEAD@{9}: Branch: renamed refs/heads/master to refs/heads/main
+[33m60f0d6e[m HEAD@{11}: commit: Updated styles, layout, and dependencies
+[33mfb6f85f[m HEAD@{12}: commit (initial): Initial commit from Create Next App

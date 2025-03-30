@@ -2,6 +2,8 @@ import React from 'react'
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Control, Controller, FieldValues, Path} from "react-hook-form";
+import {T} from "tailwindcss/dist/types-B254mqw1";
+
 interface FormFieldProps<T extends FieldValues>{
  control: Control <T>;
  name: Path<T>;
@@ -13,7 +15,7 @@ interface FormFieldProps<T extends FieldValues>{
 
 
 
-const FormFIeld = ({control, name, label, placeholder,type ="text"} : FormFieldProps <T>) => (
+const FormFIeld = ({control, name, label, placeholder,type ="text"} : FormFieldProps<T>) => (
    <Controller
        name={name}
        control={control}
