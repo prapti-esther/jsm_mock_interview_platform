@@ -7,14 +7,17 @@ import Image from "next/image"; // ✅ Import Next.js Image component
 
 
 import { Button } from "@/components/ui/button"
-import {Form, FormField} from "@/components/ui/form"
+import {Form} from "@/components/ui/form"
 
 
 import Link from "next/link";
 
 import {toast} from "sonner";
-import FormFIeld from "@/components/FormFIeld";
+import FormField from "@/components/FormField";
 import {useRouter} from "next/navigation";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "@/firebase/client";
+import {signIn, signUp} from "@/lib/actions/auth.action";
 
 
 const authFormSchema = (type: FormType)=> {
@@ -37,13 +40,39 @@ const AuthForm = ({type}:{type:FormType}) => {
             password:"",
         },
     })
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
        try{
  if(type ==='sign-up') {
+     const{name, email, password} = values;
+     const userCredentials = await createUserWithEmailAndPassword(auth,email,password);
+
+     const result = await signUp({
+         uid: userCredentials.user.uid,
+         name:name!,
+         email,
+         password,
+     })
+     if(!result?.success){
+         toast.error(result?.message);
+         return;
+
+     }
      toast.success('Account created successfully. Please sign in.');
      router.push('/sign-in')
 
  } else{
+     const{email, password} = values;
+     const userCredentials = await signInWithEmailAndPassword(auth,email,password);
+const idToken =  await userCredentials.user.getIdToken();
+if(!idToken){
+    toast.error('Sign in failed');
+    return;
+
+}
+await signIn({
+    email,idToken
+})
+
      toast.success('Sign in successfully.');
      router.push('/')
  }
@@ -68,20 +97,20 @@ const AuthForm = ({type}:{type:FormType}) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-4 form" >
                     {!isSignIn &&(
-                        <FormFIeld control={form.control}
+                        <FormField control={form.control}
                                    name="name"
                                    label="Name"
                                    placeholder="Your name"
 
                         />
                     ) }
-                    <FormFIeld control={form.control}
+                    <FormField control={form.control}
                                name="email"
                                label="Email"
                                placeholder="Your email"
                                type="email"
                     />
-                    <FormFIeld control={form.control}
+                    <FormField control={form.control}
                                name="password"
                                label="Password"
                                placeholder=" Enter Your Password"
