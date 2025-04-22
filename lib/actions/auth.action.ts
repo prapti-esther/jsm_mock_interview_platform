@@ -2,6 +2,7 @@
 
 import {auth, db} from "@/firebase/admin";
  import {cookies} from "next/headers";
+ import { redirect } from 'next/navigation';
 
  const ONE_WEEK = 60 * 60 *24*7;
 
@@ -124,4 +125,16 @@ return {
      })) as Interview[];
 
 
+ }
+ export async function signOut() {
+     const cookieStore = await cookies();
+     cookieStore.set('session', '', {
+         maxAge: 0,
+         path: '/',
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+         sameSite: 'lax'
+     });
+
+     redirect('/sign-in');
  }
