@@ -1,23 +1,58 @@
-import React from 'react'
-import {getCurrentUser} from "@/lib/actions/auth.action";
-import {getFeedbackByInterviewId, getInterviewById} from "@/lib/actions/general.action";
-import {redirect} from "next/navigation";
+import React from "react";
+import { getCurrentUser } from "@/lib/actions/auth.action";
+import { getFeedbackByInterviewId, getInterviewById } from "@/lib/actions/general.action";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
-const Page = async ({params}:RouteParams) => {
-   const {id} = await params;
-   const user= await getCurrentUser();
-   const interview = await getInterviewById(id);
-   if(!interview) redirect('/');
-   const feedback= await getFeedbackByInterviewId({
-       interviewId:id,
-       userId:user?.id!,
-   });
+const Page = async ({ params }: RouteParams) => {
+    const { id } = await params;
+    const user = await getCurrentUser();
 
-console.log(feedback);
+    // Fetch interview details
+    const interview = await getInterviewById(id);
+    if (!interview) redirect('/');  // If interview not found, redirect
+
+    // Fetch feedback based on the current user and interview ID
+    const feedback = await getFeedbackByInterviewId({
+        interviewId: id,
+        userId: user?.id!,
+    });
+
+    // If no feedback for this user, redirect or show a message
+    if (!feedback) {
+        return (
+            <div className="flex justify-center items-start min-h-screen pt-20">
+                <div className="bg-black p-10 rounded-xl border-2 border-gray-700 shadow-[0_0_25px_5px_rgba(128,128,128,0.4)] w-full max-w-2xl text-center">
+
+                    <h1 className="text-3xl font-extrabold text-indigo-100 mb-6 inter tracking-tight">
+                        No Feedback Available
+                    </h1>
+
+                    <p className="text-lg text-indigo-100 mb-10 inter">
+                        You haven't taken this interview yet. Time to ace it!
+                    </p>
+
+                    <Link href={`/interview/${id}`} className="w-full">
+                        <Button
+                            className="w-full bg-indigo-200 hover:bg-indigo-200 text-black text-lg font-bold py-4 rounded-full transition duration-300"
+                        >
+            <span className="text-black font-semibold tracking-wider">
+              Take the Interview
+            </span>
+                        </Button>
+                    </Link>
+
+                </div>
+            </div>
+        );
+    }
+
+
+
+
     return (
         <section className="section-feedback">
             <div className="flex flex-row justify-center">
@@ -34,8 +69,8 @@ console.log(feedback);
                         <p>
                             Overall Impression:{" "}
                             <span className="text-primary-200 font-bold">
-                {feedback?.totalScore}
-              </span>
+                                {feedback?.totalScore}
+                            </span>
                             /100
                         </p>
                     </div>
@@ -106,6 +141,7 @@ console.log(feedback);
                 </Button>
             </div>
         </section>
-    )
-}
-export default Page
+    );
+};
+
+export default Page;
